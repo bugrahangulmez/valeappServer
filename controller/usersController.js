@@ -12,9 +12,26 @@ const handleRegister = async (req, res) => {
 
     let hashedPwd = await bcrypt.hash(pwd, 10)
 
-    const check = await User.findOne({ email })
-    if (check) {
-      res.json({ msg: `This email adress is used by another user` })
+    if (!name || !surname || !pwd || !email || !phone) {
+      res.status(400).json({
+        error:
+          "Please check your informations and don't leave blank any input.",
+      })
+      return
+    }
+
+    const checkEmail = await User.findOne({ email })
+    if (checkEmail) {
+      res
+        .status(400)
+        .json({ error: `This email adress is used by another user` })
+      return
+    }
+    const checkPhonel = await User.findOne({ phone })
+    if (checkPhonel) {
+      res
+        .status(400)
+        .json({ error: `This phone number is used by another user` })
       return
     }
 

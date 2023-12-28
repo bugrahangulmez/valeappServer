@@ -77,12 +77,17 @@ const handleLogin = async (req, res) => {
           expiresIn: "1d",
         }
       )
-      res.json({ msg: "Logged in", accessToken, id: foundedUser._id })
+      res.json({
+        msg: "Logged in",
+        accessToken,
+        id: foundedUser._id,
+        user: foundedUser,
+      })
     } else {
-      res.json({ msg: "Your password is not correct" })
+      res.status(400).json({ msg: "Your password is not correct" })
     }
   } else {
-    res.json({ msg: "User not found" })
+    res.status(400).json({ msg: "User not found" })
   }
 }
 
@@ -91,7 +96,7 @@ const handleLogout = async (req, res) => {
   if (foundUser) {
     res.json({ msg: "users logout ok" })
   } else {
-    res.json({ msg: "User not found" })
+    res.status(400).json({ msg: "User not found" })
   }
 }
 

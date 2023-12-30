@@ -12,14 +12,6 @@ const requestSchema = new Schema(
         type: Number,
         required: true,
       },
-      latitudeDelta: {
-        type: Number,
-        required: true,
-      },
-      longitudeDelta: {
-        type: Number,
-        required: true,
-      },
     },
     targetLocation: {
       latitude: {
@@ -27,14 +19,6 @@ const requestSchema = new Schema(
         required: true,
       },
       longitude: {
-        type: Number,
-        required: true,
-      },
-      latitudeDelta: {
-        type: Number,
-        required: true,
-      },
-      longitudeDelta: {
         type: Number,
         required: true,
       },

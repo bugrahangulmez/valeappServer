@@ -13,7 +13,9 @@ const handleRegister = async (req, res) => {
   const check = await Driver.findOne({ email })
 
   if (check) {
-    res.json({ msg: `This email adress is taken by another driver` })
+    res
+      .status(400)
+      .json({ msg: `This email adress is taken by another driver` })
     return
   }
 
@@ -61,12 +63,13 @@ const handleLogin = async (req, res) => {
         accessToken,
         id: foundUser._id,
         phone: foundUser.phone,
+        driver: foundUser,
       })
     } else {
-      res.json({ msg: "Your password is incorrect" })
+      res.status(400).json({ msg: "Your password is incorrect" })
     }
   } else {
-    res.json({ msg: "Driver not found" })
+    res.status(400).json({ msg: "Driver not found" })
   }
 }
 

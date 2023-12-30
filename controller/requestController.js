@@ -16,7 +16,7 @@ const createRequest = async (req, res) => {
   if (foundUser) {
     jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
       if (err) {
-        res.json({ error: err })
+        res.status(400).json({ error: err })
         return
       }
       const result = new Request({
@@ -51,17 +51,17 @@ const acceptRequest = async (req, res) => {
   const foundRequest = await Request.findById(requestId)
 
   if (!foundDriver) {
-    res.json({ msg: "driver not found" })
+    res.status(400).json({ msg: "driver not found" })
     return
   }
   if (!foundRequest) {
-    res.json({ msg: "request not found" })
+    res.status(400).json({ msg: "request not found" })
     return
   }
 
   jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
     if (err) {
-      res.json({ error: err })
+      res.status(400).json({ error: err })
       return
     }
     foundRequest.driver.id = foundDriver._id
@@ -83,14 +83,14 @@ const showRequests = async (req, res) => {
     process.env.ACCESS_TOKEN_SECRET,
     async (err, decoded) => {
       if (err) {
-        res.json({ error: err })
+        res.status(400).json({ error: err })
         return
       }
       const list = await Request.find({ isAccepted: false })
       if (list) {
         res.json({ list, decoded })
       } else {
-        res.json({ msg: "could not found any request", decoded })
+        res.status(400).json({ msg: "could not found any request", decoded })
       }
     }
   )
@@ -102,7 +102,7 @@ const rejectRequest = async (req, res) => {
 
   const foundRequest = await Request.findById(requestId)
   if (!foundRequest) {
-    res.json({ msg: "Request could not found" })
+    res.status(400).json({ msg: "Request could not found" })
     return
   }
 
@@ -111,7 +111,7 @@ const rejectRequest = async (req, res) => {
     process.env.ACCESS_TOKEN_SECRET,
     async (err, decoded) => {
       if (err) {
-        res.json({ error: err })
+        res.status(400).json({ error: err })
         return
       }
       foundRequest.isAccepted = false

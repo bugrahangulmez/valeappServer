@@ -42,6 +42,17 @@ const cancelRequest = async (req, res) => {
   res.json({ result: result.acknowledged })
 }
 
+const showDriverRequests = async (req, res) => {
+  let driverId = req.body.driverId
+  const foundDriver = await Driver.findById(driverId)
+  if (!foundDriver) {
+    res.status(400).json({ msg: "Driver not found." })
+    return
+  }
+  let requests = await Request.find({ "driver.id": driverId })
+  res.json({ requests })
+}
+
 const acceptRequest = async (req, res) => {
   let requestId = req.body.requestId
   let driverId = req.body.driverId
@@ -129,4 +140,5 @@ module.exports = {
   acceptRequest,
   showRequests,
   rejectRequest,
+  showDriverRequests,
 }

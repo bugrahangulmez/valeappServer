@@ -90,7 +90,7 @@ const showRequests = async (req, res) => {
       if (list) {
         res.json({ list, decoded })
       } else {
-        res.status(400).json({ msg: "could not found any request", decoded })
+        res.json({ msg: "could not found any request", decoded })
       }
     }
   )

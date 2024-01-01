@@ -27,6 +27,10 @@ const requestSchema = new Schema(
       type: Number,
       required: true,
     },
+    distanceKm: {
+      type: String,
+      required: true,
+    },
     price: {
       type: Number,
       required: true,
@@ -42,6 +46,14 @@ const requestSchema = new Schema(
     driver: {
       id: String,
       phone: String,
+    },
+    district: {
+      type: String,
+      required: true,
+    },
+    neighborhood: {
+      type: String,
+      required: true,
     },
   },
   {

@@ -7,9 +7,12 @@ const createRequest = async (req, res) => {
   let currentLocation = req.body.currentLocation
   let targetLocation = req.body.targetLocation
   let distance = req.body.distance
+  let distanceKm = req.body.distanceKm
   let price = req.body.price
   let userId = req.body.userId
   let accessToken = req.body.accessToken
+  let district = req.body.district
+  let neighborhood = req.body.neighborhood
 
   const foundUser = await User.findOne({ _id: userId })
 
@@ -19,17 +22,24 @@ const createRequest = async (req, res) => {
         res.status(400).json({ error: err })
         return
       }
-      const result = new Request({
-        currentLocation,
-        targetLocation,
-        distance,
-        price,
-        userId,
-      })
+      try {
+        const result = new Request({
+          currentLocation,
+          targetLocation,
+          distance,
+          price,
+          userId,
+          distanceKm,
+          district,
+          neighborhood,
+        })
 
-      result.save()
+        result.save()
 
-      res.json({ id: result.id, data: decoded.userName })
+        res.json({ id: result.id, data: decoded.userName, result })
+      } catch (error) {
+        res.status(400).json({ msg: error.message })
+      }
     })
   }
 }
@@ -51,6 +61,28 @@ const showDriverRequests = async (req, res) => {
   }
   let requests = await Request.find({ "driver.id": driverId })
   res.json({ requests })
+}
+
+const showUserRequests = async (req, res) => {
+  let accessToken = req.body.accessToken
+  let userId = req.body.userId
+
+  jwt.verify(
+    accessToken,
+    process.env.ACCESS_TOKEN_SECRET,
+    async (err, decoded) => {
+      if (err) {
+        res.status(400).json({ error: err })
+        return
+      }
+      const userRequests = await Request.find({ userId })
+      if (userRequests) {
+        res.json({ userRequests, decoded })
+      } else {
+        res.json({ msg: "could not found any request", decoded })
+      }
+    }
+  )
 }
 
 const acceptRequest = async (req, res) => {
@@ -141,4 +173,5 @@ module.exports = {
   showRequests,
   rejectRequest,
   showDriverRequests,
+  showUserRequests,
 }

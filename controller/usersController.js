@@ -56,6 +56,8 @@ const handleLogin = async (req, res) => {
   let pwd = req.body.pwd
   let phone = req.body.phone
 
+  console.log({ email, pwd })
+
   let foundedUser
 
   if (email) {

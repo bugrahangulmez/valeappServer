@@ -7,6 +7,7 @@ const {
   rejectRequest,
   showDriverRequests,
   showUserRequests,
+  showRequestDetail,
 } = require("../controller/requestController")
 
 router.post("/create", createRequest)
@@ -16,5 +17,6 @@ router.post("/list", showRequests)
 router.post("/reject", rejectRequest)
 router.post("/driverrequests", showDriverRequests)
 router.post("/userrequests", showUserRequests)
+router.post("/", showRequestDetail)
 
 module.exports = router

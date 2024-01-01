@@ -17,30 +17,44 @@ const createRequest = async (req, res) => {
   const foundUser = await User.findOne({ _id: userId })
 
   if (foundUser) {
-    jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
-      if (err) {
-        res.status(400).json({ error: err })
-        return
-      }
-      try {
-        const result = new Request({
-          currentLocation,
-          targetLocation,
-          distance,
-          price,
-          userId,
-          distanceKm,
-          district,
-          neighborhood,
-        })
+    jwt.verify(
+      accessToken,
+      process.env.ACCESS_TOKEN_SECRET,
+      async (err, decoded) => {
+        if (err) {
+          res.status(400).json({ error: err })
+          return
+        }
+        try {
+          let check = await Request.findOne({ userId: foundUser._id })
 
-        result.save()
+          if (check) {
+            res.json({
+              msg: "En fazla bir istek oluşturabilirsiniz",
+              request: check,
+            })
+            return
+          }
 
-        res.json({ id: result.id, data: decoded.userName, result })
-      } catch (error) {
-        res.status(400).json({ msg: error.message })
+          const result = new Request({
+            currentLocation,
+            targetLocation,
+            distance,
+            price,
+            userId,
+            distanceKm,
+            district,
+            neighborhood,
+          })
+
+          result.save()
+
+          res.json({ id: result.id, data: decoded.userName, result })
+        } catch (error) {
+          res.status(400).json({ msg: error.message })
+        }
       }
-    })
+    )
   }
 }
 
@@ -83,6 +97,27 @@ const showUserRequests = async (req, res) => {
       }
     }
   )
+}
+
+const showRequestDetail = async (req, res) => {
+  let requestId = req.body.requestId
+  let accessToken = req.body.accessToken
+
+  const foundRequest = await Request.findById(requestId)
+
+  if (!foundRequest) {
+    res.status(400).json({ msg: "Request not found." })
+    return
+  }
+
+  jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
+    if (err) {
+      res.status(400).json({ msg: err })
+      return
+    }
+
+    res.json({ request: foundRequest })
+  })
 }
 
 const acceptRequest = async (req, res) => {
@@ -174,4 +209,5 @@ module.exports = {
   rejectRequest,
   showDriverRequests,
   showUserRequests,
+  showRequestDetail,
 }

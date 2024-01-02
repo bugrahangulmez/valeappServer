@@ -45,7 +45,7 @@ const handleRegister = async (req, res) => {
 
     result.save()
 
-    res.json({ msg: result._id })
+    res.json({ msg: result })
   } catch (error) {
     throw new Error(error)
   }

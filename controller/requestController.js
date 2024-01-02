@@ -29,7 +29,7 @@ const createRequest = async (req, res) => {
           let check = await Request.findOne({ userId: foundUser._id })
 
           if (check) {
-            res.json({
+            res.status(400).json({
               msg: "En fazla bir istek oluşturabilirsiniz",
               request: check,
             })
